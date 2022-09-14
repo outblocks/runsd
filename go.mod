@@ -1,13 +1,18 @@
 module cloud_run_proxy
 
-go 1.13
+go 1.19
 
 require (
-	github.com/google/go-cmp v0.4.0
-	github.com/miekg/dns v1.1.41
-	golang.org/x/crypto v0.0.0-20210503195802-e9a32991a82e // indirect
-	golang.org/x/net v0.0.0-20210504132125-bbd867fde50d
-	golang.org/x/sys v0.0.0-20210503173754-0981d6026fa6 // indirect
-	golang.org/x/tools v0.0.0-20191216052735-49a3e744a425 // indirect
-	k8s.io/klog/v2 v2.8.0
+	github.com/google/go-cmp v0.5.9
+	github.com/miekg/dns v1.1.50
+	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
+	k8s.io/klog/v2 v2.80.1
+)
+
+require (
+	github.com/go-logr/logr v1.2.3 // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
+	golang.org/x/sys v0.0.0-20220913175220-63ea55921009 // indirect
+	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/tools v0.1.12 // indirect
 )
