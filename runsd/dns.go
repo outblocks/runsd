@@ -152,6 +152,9 @@ func (d *dnsHijack) handleLocal(w dns.ResponseWriter, msg *dns.Msg) {
 // recurse proxies the message to the backend nameserver.
 func (d *dnsHijack) recurse(w dns.ResponseWriter, msg *dns.Msg) {
 	klog.V(5).Infof("[dns] >> recursing type=%s name=%v", dns.TypeToString[msg.Question[0].Qtype], msg.Question[0].Name)
+
+	msg.Question = []dns.Question{msg.Question[0]}
+
 	r, rtt, err := new(dns.Client).Exchange(msg, net.JoinHostPort(d.nameserver, "53"))
 	if err != nil {
 		klog.V(4).Infof("[dns] << WARNING: recursive dns fail: %v, servfail", err)
@@ -162,6 +165,10 @@ func (d *dnsHijack) recurse(w dns.ResponseWriter, msg *dns.Msg) {
 		dns.TypeToString[msg.Question[0].Qtype],
 		msg.Question[0].Name,
 		dns.RcodeToString[r.Rcode], len(r.Answer), rtt)
+
+	if len(r.Answer) > 0 {
+		r.Answer = []dns.RR{r.Answer[len(r.Answer)-1]}
+	}
 
 	// r.SetReply(msg) // TODO(ahmetb): not sure why but removing this actually preserves the response hdrs and other sections well
 	w.WriteMsg(r)
@@ -177,7 +184,7 @@ func nxdomain(w dns.ResponseWriter, msg *dns.Msg) {
 	return
 }
 
-//  servfail an authoritative SERVFAIL (error) reply
+// servfail an authoritative SERVFAIL (error) reply
 func servfail(w dns.ResponseWriter, msg *dns.Msg) {
 	r := new(dns.Msg)
 	r.SetReply(msg)
