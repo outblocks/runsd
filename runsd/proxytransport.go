@@ -51,6 +51,9 @@ func (a authenticatingTransport) RoundTrip(req *http.Request) (*http.Response, e
 	}
 	if req.Header.Get("authorization") == "" {
 		req.Header.Set("authorization", "Bearer "+idToken)
+	} else {
+		// If the request is already using the `Authorization` header, we should use the `X-Serverless-Authorization` header
+		req.Header.Set("x-serverless-authorization", "Bearer "+idToken)
 	}
 	ua := req.Header.Get("user-agent")
 	req.Header.Set("user-agent", fmt.Sprintf("runsd version=%s", version))

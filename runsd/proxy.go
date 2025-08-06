@@ -44,8 +44,10 @@ func newReverseProxy(projectHash, currentRegion, internalDomain string) *reverse
 	}
 }
 
+type ctxKeyEarlyResponseType string
+
 const (
-	ctxKeyEarlyResponse = `early-response`
+	ctxKeyEarlyResponse ctxKeyEarlyResponseType = `early-response`
 )
 
 func (rp *reverseProxy) newReverseProxyHandler(tr http.RoundTripper) http.Handler {
